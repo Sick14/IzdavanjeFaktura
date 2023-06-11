@@ -1,0 +1,68 @@
+﻿@model IzdavanjeFaktura.Models.Invoice
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Invoice</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.InvoiceNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InvoiceNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InvoiceIssueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InvoiceIssueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InvoiceDueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InvoiceDueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPriceWithoutVAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPriceWithoutVAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPriceWithVAT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPriceWithVAT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Customer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Customer)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.InvoiceID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>

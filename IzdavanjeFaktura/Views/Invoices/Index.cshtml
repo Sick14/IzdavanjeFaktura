@@ -1,0 +1,65 @@
+﻿@model IEnumerable<IzdavanjeFaktura.Models.Invoice>
+
+@{
+    ViewBag.Title = "Invoices List";
+}
+
+<h2>Invoices List</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceIssueDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InvoiceDueDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPriceWithoutVAT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPriceWithVAT)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Customer)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceIssueDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.InvoiceDueDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPriceWithoutVAT)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPriceWithVAT)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Customer)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.InvoiceID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.InvoiceID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.InvoiceID })
+        </td>
+    </tr>
+}
+
+</table>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
