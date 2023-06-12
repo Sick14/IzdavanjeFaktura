@@ -34,7 +34,7 @@ namespace IzdavanjeFaktura.Controllers
 
             ViewBag.PageCount = Convert.ToInt32(Math.Ceiling(products.Count() / (double)pageSize));
 
-            IQueryable<Product> pagedResults = products.OrderBy(i => i.ProductID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            IQueryable<Product> pagedResults = products.OrderByDescending(i => i.ProductID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             return View(pagedResults);
         }

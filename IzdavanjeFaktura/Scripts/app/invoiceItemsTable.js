@@ -30,9 +30,11 @@
     });
 
     $('#ordertable').on('click', '.remove', function () {
+        var rowNumber = $(this).closest("tr").index();
         var price = $(this).parents('tr').find("[name='TotalPriceWithoutVATPerItem']").val();
         calculatePriceSubstract(price);
         $(this).parents('tr').remove();
+        orderItems.splice(rowNumber, 1); 
     });
 
     function calculatePrice(totalPrice) {
@@ -66,12 +68,14 @@
                 type: "POST",
                 data: JSON.stringify(data),
                 dataType: "JSON",
-                contentType: "application/json",
-                success: function () {
-                },
-                error: function () {
-                }
+                contentType: "application/json"
             });
+            if (orderItems.length > 0) {
+                $(location).prop('href', '../Invoices/Index');
+            }
+            else {
+                alert("error");
+            }
         }
         e.preventDefault();
     }); 

@@ -36,7 +36,7 @@ namespace IzdavanjeFaktura.Controllers
 
             ViewBag.PageCount = Convert.ToInt32(Math.Ceiling(invoices.Count() / (double)pageSize));
 
-            IQueryable<Invoice> pagedResults = invoices.OrderBy(i => i.InvoiceID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            IQueryable<Invoice> pagedResults = invoices.OrderByDescending(i => i.InvoiceID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             List<InvoiceViewModel> invoiceList = new List<InvoiceViewModel>();
 
