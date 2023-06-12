@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IzdavanjeFaktura.Models;
+using Microsoft.Ajax.Utilities;
 
 namespace IzdavanjeFaktura.Controllers
 {
@@ -16,9 +17,26 @@ namespace IzdavanjeFaktura.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Products
-        public ActionResult Index()
+        public ActionResult Index(int? page = 1, string description = "")
         {
-            return View(db.Products.ToList());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.Description = description;
+
+            IQueryable<Product> products = db.Products;
+
+            if (!String.IsNullOrEmpty(description))
+            {
+                products = products.Where(i => i.Description.ToLower().Contains(description.ToLower()));
+            }
+
+            ViewBag.PageCount = Convert.ToInt32(Math.Ceiling(products.Count() / (double)pageSize));
+
+            IQueryable<Product> pagedResults = products.OrderBy(i => i.ProductID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            return View(pagedResults);
         }
 
         // GET: Products/Details/5

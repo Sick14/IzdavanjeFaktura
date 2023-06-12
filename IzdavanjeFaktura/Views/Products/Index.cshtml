@@ -9,6 +9,28 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+@using (Html.BeginForm("Index", "Products", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                @Html.TextBox("description", null, new { @class = "form-control", placeholder = "Product description" })
+            </div>
+        </div>
+
+        <div class="col-md-3 text-right col-md-offset-9">
+            <div class="form-group" style="margin-top: -20px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                @Html.ActionLink("Cancel Search", "Index", null, null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+    </div>
+}
+
+<br>
+
+
 <table class="table">
     <tr>
         <th>
@@ -20,22 +42,114 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PriceWithoutVAT)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ProductID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ProductID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ProductID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriceWithoutVAT)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ProductID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ProductID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ProductID })
+            </td>
+        </tr>
+    }
 
 </table>
+
+<ul class="pagination">
+    <li class="page-item">
+        @if (ViewBag.CurrentPage > 1)
+        {
+            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, description = ViewBag.Description})">Previous</a>
+        }
+        else
+        {
+            <a class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </a>
+        }
+    </li>
+
+    @{
+        var currentPage = (int)ViewBag.CurrentPage;
+        var pageCount = (int)ViewBag.PageCount;
+
+        // How many pages views right or left of currentPage
+        const int PageLeft = 3;
+        const int PagesRight = 3;
+
+        // get first page befor ...
+        var fromPage = Math.Max(1, currentPage - PageLeft);
+
+        // get last page after ...
+        var toPage = Math.Min(pageCount, currentPage + PagesRight);
+
+        if (pageCount - toPage == 1)
+        {
+            toPage = pageCount;
+        }
+
+        if (fromPage > 1)
+        {
+            // view First page
+            <li>
+                <a class="page-link" href="@Url.Action("Index", new { page = 1, description = ViewBag.Description})">1</a>
+            </li>
+            if (fromPage > 2)
+            {
+                // view first ...
+                // calculate number page for link ..., it's middle between first page and fromPage
+                var middleNumber = (int)Math.Ceiling((double)(fromPage - 2) / 2) + 1;
+                <li>
+                    <a class="page-link" href="@Url.Action("Index", new { page = middleNumber, description = ViewBag.Description})">...</a>
+                </li>
+            }
+        }
+
+        // view paginator between currentPage
+        for (int i = fromPage; i <= toPage; i++)
+        {
+            <li @Html.Raw(currentPage == i ? "class=\"page-item active\"" : "") )>
+                <a class="page-link" href="@Url.Action("Index", new { page = i, description = ViewBag.Description})">@i</a>
+            </li>
+        }
+
+
+        // view second ...
+        if (toPage < pageCount)
+        {
+            int middleNumber = (int)Math.Ceiling((double)(pageCount - toPage) / 2) + toPage;
+            <li>
+                <a class="page-link" href="@Url.Action("Index", new { page = middleNumber, description = ViewBag.Description})">...</a>
+            </li>
+            // view last page
+            if (toPage < pageCount - 1)
+            {
+                <li>
+                    <a class="page-link" href="@Url.Action("Index", new { page = pageCount, description = ViewBag.Description})">@pageCount</a>
+                </li>
+            }
+
+        }
+    }
+
+    <li class="page-item">
+        @if (ViewBag.CurrentPage < ViewBag.PageCount)
+        {
+            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, description = ViewBag.Description})">Next</a>
+        }
+        else
+        {
+            <a class="page-item disabled">
+                <span class="page-link">Next</span>
+            </a>
+        }
+    </li>
+</ul>
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>

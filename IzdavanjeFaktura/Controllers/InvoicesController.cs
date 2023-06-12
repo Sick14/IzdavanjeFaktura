@@ -4,8 +4,10 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using IzdavanjeFaktura.Models;
 using Microsoft.AspNet.Identity;
 
@@ -17,13 +19,28 @@ namespace IzdavanjeFaktura.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Invoices
-        public ActionResult Index()
+        public ActionResult Index(int? page = 1, string number = "")
         {
-            var invoices = db.Invoices.ToList();
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.Number = number;
+
+            IQueryable<Invoice> invoices = db.Invoices;
+
+            if (!String.IsNullOrEmpty(number))
+            {
+                invoices = invoices.Where(i => i.InvoiceNumber.ToLower().Contains(number.ToLower()));
+            }
+
+            ViewBag.PageCount = Convert.ToInt32(Math.Ceiling(invoices.Count() / (double)pageSize));
+
+            IQueryable<Invoice> pagedResults = invoices.OrderBy(i => i.InvoiceID).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             List<InvoiceViewModel> invoiceList = new List<InvoiceViewModel>();
 
-            foreach (var item in invoices)
+            foreach (var item in pagedResults)
             {
                 InvoiceViewModel invoiceViewModel = new InvoiceViewModel();
 
