@@ -1,4 +1,4 @@
-﻿@model IzdavanjeFaktura.Models.Invoice
+﻿@model IzdavanjeFaktura.Models.InvoiceViewModel
 
 @{
     ViewBag.Title = "Delete";
@@ -57,6 +57,14 @@
 
         <dd>
             @Html.DisplayFor(model => model.Customer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
         </dd>
 
     </dl>

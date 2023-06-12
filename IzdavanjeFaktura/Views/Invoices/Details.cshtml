@@ -1,4 +1,4 @@
-﻿@model IzdavanjeFaktura.Models.Invoice
+﻿@model IzdavanjeFaktura.Models.InvoiceViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -58,7 +58,56 @@
             @Html.DisplayFor(model => model.Customer)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
     </dl>
+
+    <hr />
+
+    @foreach (var item in Model.InvoiceItems)
+    {
+        <dl class="dl-horizontal">
+
+                <dt>
+                    @Html.DisplayNameFor(modelItem => item.Product.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(modelItem => item.Product.Description)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(modelItem => item.Quantity)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(modelItem => item.PriceWithoutVAT)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(modelItem => item.PriceWithoutVAT)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(modelItem => item.TotalPriceWithoutVAT)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(modelItem => item.TotalPriceWithoutVAT)
+                </dd>
+
+        </dl>
+    }
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.InvoiceID }) |

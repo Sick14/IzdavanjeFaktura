@@ -48,8 +48,7 @@
         var total = totalPriceWithoutVAT - totalPriceConvert;
         $('#TotalPriceWithoutVAT').val(total.toFixed(2));
     }
-
-    $('#submit').click(function () {
+    $('#submit').click(function (e) {
         var data = {
             InvoiceNumber: $('#InvoiceNumber').val().trim(),
             InvoiceIssueDate: $('#InvoiceIssueDate').val().trim(),
@@ -60,12 +59,20 @@
             InvoiceItems: orderItems
         }
 
-        $.ajax({
-            url: '/Invoices/Create',
-            type: "POST",
-            data: JSON.stringify(data),
-            dataType: "JSON",
-            contentType: "application/json"
-        });
+        $("#myForm").validate(); // this will validate the form and show the validation messages
+        if ($("#myForm").valid()) {
+            $.ajax({
+                url: '/Invoices/Create',
+                type: "POST",
+                data: JSON.stringify(data),
+                dataType: "JSON",
+                contentType: "application/json",
+                success: function () {
+                },
+                error: function () {
+                }
+            });
+        }
+        e.preventDefault();
     }); 
 });

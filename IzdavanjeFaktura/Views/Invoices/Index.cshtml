@@ -1,4 +1,4 @@
-﻿@model IEnumerable<IzdavanjeFaktura.Models.Invoice>
+﻿@model IEnumerable<IzdavanjeFaktura.Models.InvoiceViewModel>
 
 @{
     ViewBag.Title = "Invoices List";
@@ -29,6 +29,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Customer)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </th>
         <th></th>
     </tr>
 
@@ -53,9 +56,12 @@
             @Html.DisplayFor(modelItem => item.Customer)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.InvoiceID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.InvoiceID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.InvoiceID })
+            @Html.DisplayFor(modelItem => item.User.Email)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.InvoiceID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.InvoiceID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.InvoiceID })
         </td>
     </tr>
 }

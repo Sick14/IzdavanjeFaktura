@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using IzdavanjeFaktura.Models;
+using Microsoft.AspNet.Identity;
 
 namespace IzdavanjeFaktura.Controllers
 {
@@ -18,7 +19,28 @@ namespace IzdavanjeFaktura.Controllers
         // GET: Invoices
         public ActionResult Index()
         {
-            return View(db.Invoices.ToList());
+            var invoices = db.Invoices.ToList();
+
+            List<InvoiceViewModel> invoiceList = new List<InvoiceViewModel>();
+
+            foreach (var item in invoices)
+            {
+                InvoiceViewModel invoiceViewModel = new InvoiceViewModel();
+
+                invoiceViewModel.TotalPriceWithoutVAT = item.TotalPriceWithoutVAT;
+                invoiceViewModel.InvoiceNumber = item.InvoiceNumber;
+                invoiceViewModel.InvoiceIssueDate = item.InvoiceIssueDate.Date;
+                invoiceViewModel.InvoiceDueDate = item.InvoiceDueDate.Date;
+                invoiceViewModel.Customer = item.Customer;
+                invoiceViewModel.TotalPriceWithVAT = item.TotalPriceWithVAT;
+                invoiceViewModel.InvoiceID = item.InvoiceID;
+                invoiceViewModel.User = db.Users.Where(u => u.Id == item.UserID).FirstOrDefault();
+                //invoiceViewModel.InvoiceItems = item.InvoiceItems.ToList();
+
+                invoiceList.Add(invoiceViewModel);
+            }
+
+            return View(invoiceList);
         }
 
         // GET: Invoices/Details/5
@@ -29,11 +51,24 @@ namespace IzdavanjeFaktura.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Invoice invoice = db.Invoices.Find(id);
+
+            InvoiceViewModel invoiceViewModel = new InvoiceViewModel();
+
+            invoiceViewModel.TotalPriceWithoutVAT = invoice.TotalPriceWithoutVAT;
+            invoiceViewModel.InvoiceNumber = invoice.InvoiceNumber;
+            invoiceViewModel.InvoiceIssueDate = invoice.InvoiceIssueDate.Date;
+            invoiceViewModel.InvoiceDueDate = invoice.InvoiceDueDate.Date;
+            invoiceViewModel.Customer = invoice.Customer;
+            invoiceViewModel.TotalPriceWithVAT = invoice.TotalPriceWithVAT;
+            invoiceViewModel.InvoiceID = invoice.InvoiceID;
+            invoiceViewModel.User = db.Users.Where(u => u.Id == invoice.UserID).FirstOrDefault();
+            invoiceViewModel.InvoiceItems = invoice.InvoiceItems.ToList();
+
             if (invoice == null)
             {
                 return HttpNotFound();
             }
-            return View(invoice);
+            return View(invoiceViewModel);
         }
 
         // GET: Invoices/Create
@@ -72,7 +107,8 @@ namespace IzdavanjeFaktura.Controllers
                     InvoiceIssueDate = invoiceViewModel.InvoiceIssueDate,
                     InvoiceNumber = invoiceViewModel.InvoiceNumber,
                     TotalPriceWithoutVAT = invoiceViewModel.TotalPriceWithoutVAT,
-                    TotalPriceWithVAT = invoiceViewModel.TotalPriceWithVAT
+                    TotalPriceWithVAT = invoiceViewModel.TotalPriceWithVAT,
+                    UserID = User.Identity.GetUserId()
                 };
 
                 db.Invoices.Add(invoice);
@@ -94,7 +130,7 @@ namespace IzdavanjeFaktura.Controllers
                                                      select new SelectListItem
                                                      {
                                                          Value = p.ProductID.ToString(),
-                                                         Text = $"{p.Description}"
+                                                         Text = p.Description
                                                      };
 
             ViewBag.Products = new SelectList(selectList, "Value", "Text");
@@ -141,11 +177,23 @@ namespace IzdavanjeFaktura.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Invoice invoice = db.Invoices.Find(id);
+
+            InvoiceViewModel invoiceViewModel = new InvoiceViewModel();
+
+            invoiceViewModel.TotalPriceWithoutVAT = invoice.TotalPriceWithoutVAT;
+            invoiceViewModel.InvoiceNumber = invoice.InvoiceNumber;
+            invoiceViewModel.InvoiceIssueDate = invoice.InvoiceIssueDate.Date;
+            invoiceViewModel.InvoiceDueDate = invoice.InvoiceDueDate.Date;
+            invoiceViewModel.Customer = invoice.Customer;
+            invoiceViewModel.TotalPriceWithVAT = invoice.TotalPriceWithVAT;
+            invoiceViewModel.InvoiceID = invoice.InvoiceID;
+            invoiceViewModel.User = db.Users.Where(u => u.Id == invoice.UserID).FirstOrDefault();
+
             if (invoice == null)
             {
                 return HttpNotFound();
             }
-            return View(invoice);
+            return View(invoiceViewModel);
         }
 
         // POST: Invoices/Delete/5
@@ -153,9 +201,21 @@ namespace IzdavanjeFaktura.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Invoice invoice = db.Invoices.Find(id);
-            db.Invoices.Remove(invoice);
-            db.SaveChanges();
+            try
+            {
+                List<InvoiceItem> invocieItems = db.InvoiceItems.Where(i => i.InvoiceID == id).ToList();
+                db.InvoiceItems.RemoveRange(invocieItems);
+                db.SaveChanges();
+
+                Invoice invoice = db.Invoices.Find(id);
+                db.Invoices.Remove(invoice);
+                db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
             return RedirectToAction("Index");
         }
 
