@@ -71,6 +71,9 @@ namespace IzdavanjeFaktura.Controllers
             {
                 db.Products.Add(product);
                 db.SaveChanges();
+
+                TempData["success"] = "Product created successfully!";
+                
                 return RedirectToAction("Index");
             }
 
@@ -103,6 +106,9 @@ namespace IzdavanjeFaktura.Controllers
             {
                 db.Entry(product).State = EntityState.Modified;
                 db.SaveChanges();
+
+                TempData["success"] = "Product edited successfully!";
+
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -131,6 +137,9 @@ namespace IzdavanjeFaktura.Controllers
             Product product = db.Products.Find(id);
             db.Products.Remove(product);
             db.SaveChanges();
+
+            TempData["success"] = "Product deleted successfully!";
+
             return RedirectToAction("Index");
         }
 

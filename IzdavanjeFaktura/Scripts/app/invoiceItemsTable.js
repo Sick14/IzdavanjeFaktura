@@ -80,6 +80,7 @@
             TotalPriceWithoutVAT: $('#TotalPriceWithoutVAT').val().trim(),
             TotalPriceWithVAT: $('#TotalPriceWithVAT').val().trim(),
             Customer: $('#Customer').val().trim(),
+            CountryID: $('#CountryID').val().trim(),
             InvoiceItems: orderItems
         }
 
@@ -93,10 +94,14 @@
                 contentType: "application/json"
             });
             if (orderItems.length > 0) {
-                $(location).prop('href', '../Invoices/Index');
+                var message = "Invoice created successfully!"
+                $(location).prop('href', '../Invoices/Index?message=' + message);
             }
             else {
-                alert("error");
+                $('.alert-danger').removeClass("hidden");
+                setTimeout(function () {
+                    $('.alert-danger').fadeOut('fast');
+                }, 3000);
             }
         }
         e.preventDefault();

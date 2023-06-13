@@ -188,6 +188,10 @@
     <Compile Include="Migrations\202306131803011_AddedCountryModel.designer.cs">
       <DependentUpon>202306131803011_AddedCountryModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306131957406_AddedCountryToInvoice.cs" />
+    <Compile Include="Migrations\202306131957406_AddedCountryToInvoice.designer.cs">
+      <DependentUpon>202306131957406_AddedCountryToInvoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Country.cs" />
@@ -338,6 +342,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202306131803011_AddedCountryModel.resx">
       <DependentUpon>202306131803011_AddedCountryModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306131957406_AddedCountryToInvoice.resx">
+      <DependentUpon>202306131957406_AddedCountryToInvoice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

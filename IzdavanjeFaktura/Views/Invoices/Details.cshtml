@@ -59,6 +59,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayName("Country (VAT persentage)")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country.Name) (@Html.DisplayFor(model => model.Country.VATPercentage)%)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.User.Email)
         </dt>
 

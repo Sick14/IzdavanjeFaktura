@@ -61,7 +61,8 @@
         <div class="form-group">
             @Html.Label("VAT Percentage", htmlAttributes: new { @class = "control-label col-md-4" })
             <div class="col-md-8">
-                @Html.DropDownList("CountryID", ViewBag.Countries as SelectList, "---  Select country  ---", new { @class = "form-control" })
+                @Html.DropDownList("CountryID", ViewBag.Countries as SelectList, "---  Select country  ---", new { @class = "form-control" })                @Html.ValidationMessageFor(model => model.TotalPriceWithoutVAT, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.CountryID, "", new { @class = "text-danger" })
             </div>
         </div>
 

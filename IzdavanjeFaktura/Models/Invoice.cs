@@ -17,6 +17,8 @@ namespace IzdavanjeFaktura.Models
         public string Customer { get; set; }
         public string UserID { get; set; }
         public virtual ApplicationUser User { get; set; }
+        public int CountryID { get; set; }
+        public Country Country { get; set; }
         public virtual ICollection<InvoiceItem> InvoiceItems { get; set; }
     }
 }

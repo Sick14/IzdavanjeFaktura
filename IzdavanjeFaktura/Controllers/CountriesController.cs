@@ -70,6 +70,9 @@ namespace IzdavanjeFaktura.Controllers
             {
                 db.Countries.Add(country);
                 db.SaveChanges();
+
+                TempData["success"] = "Country created successfully!";
+
                 return RedirectToAction("Index");
             }
 
@@ -102,6 +105,9 @@ namespace IzdavanjeFaktura.Controllers
             {
                 db.Entry(country).State = EntityState.Modified;
                 db.SaveChanges();
+
+                TempData["success"] = "Country edited successfully!";
+
                 return RedirectToAction("Index");
             }
             return View(country);
@@ -130,6 +136,9 @@ namespace IzdavanjeFaktura.Controllers
             Country country = db.Countries.Find(id);
             db.Countries.Remove(country);
             db.SaveChanges();
+
+            TempData["success"] = "Country deleted successfully!";
+
             return RedirectToAction("Index");
         }
 

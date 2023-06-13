@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using System.Web.Services.Description;
 using IzdavanjeFaktura.Models;
 using Microsoft.AspNet.Identity;
 
@@ -19,10 +20,12 @@ namespace IzdavanjeFaktura.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Invoices
-        public ActionResult Index(int? page = 1, string number = "")
+        public ActionResult Index(int? page = 1, string number = "", string message = null)
         {
             int pageSize = 10;
             int pageNumber = (page ?? 1);
+
+            TempData["success"] = message;
 
             ViewBag.CurrentPage = pageNumber;
             ViewBag.Number = number;
@@ -80,6 +83,7 @@ namespace IzdavanjeFaktura.Controllers
             invoiceViewModel.InvoiceID = invoice.InvoiceID;
             invoiceViewModel.User = db.Users.Where(u => u.Id == invoice.UserID).FirstOrDefault();
             invoiceViewModel.InvoiceItems = invoice.InvoiceItems.ToList();
+            invoiceViewModel.Country = db.Countries.Where(c => c.CountryID == invoice.CountryID).FirstOrDefault();
 
             if (invoice == null)
             {
@@ -106,7 +110,7 @@ namespace IzdavanjeFaktura.Controllers
                                                         select new SelectListItem
                                                      {
                                                          Value = c.CountryID.ToString(),
-                                                         Text = c.Name + " (" + c.VATPercentage + ")"
+                                                         Text = c.Name + " (" + c.VATPercentage + " %)"
                                                      };
 
             ViewBag.Countries = new SelectList(countriesList, "Value", "Text");
@@ -130,7 +134,8 @@ namespace IzdavanjeFaktura.Controllers
                     InvoiceNumber = invoiceViewModel.InvoiceNumber,
                     TotalPriceWithoutVAT = invoiceViewModel.TotalPriceWithoutVAT,
                     TotalPriceWithVAT = invoiceViewModel.TotalPriceWithVAT,
-                    UserID = User.Identity.GetUserId()
+                    UserID = User.Identity.GetUserId(),
+                    CountryID = invoiceViewModel.CountryID
                 };
 
                 db.Invoices.Add(invoice);
@@ -156,6 +161,16 @@ namespace IzdavanjeFaktura.Controllers
                                                      };
 
             ViewBag.Products = new SelectList(selectList, "Value", "Text");
+
+            var countries = db.Countries.ToList();
+            IEnumerable<SelectListItem> countriesList = from c in countries
+                                                        select new SelectListItem
+                                                        {
+                                                            Value = c.CountryID.ToString(),
+                                                            Text = c.Name + " (" + c.VATPercentage + " %)"
+                                                        };
+
+            ViewBag.Countries = new SelectList(countriesList, "Value", "Text");
 
             return View(invoiceViewModel);
         }
@@ -186,6 +201,9 @@ namespace IzdavanjeFaktura.Controllers
             {
                 db.Entry(invoice).State = EntityState.Modified;
                 db.SaveChanges();
+
+                TempData["success"] = "Invoice edited successfully!";
+
                 return RedirectToAction("Index");
             }
             return View(invoice);
@@ -210,6 +228,8 @@ namespace IzdavanjeFaktura.Controllers
             invoiceViewModel.TotalPriceWithVAT = invoice.TotalPriceWithVAT;
             invoiceViewModel.InvoiceID = invoice.InvoiceID;
             invoiceViewModel.User = db.Users.Where(u => u.Id == invoice.UserID).FirstOrDefault();
+            invoiceViewModel.InvoiceItems = invoice.InvoiceItems.ToList();
+            invoiceViewModel.Country = db.Countries.Where(c => c.CountryID == invoice.CountryID).FirstOrDefault();
 
             if (invoice == null)
             {
@@ -232,6 +252,8 @@ namespace IzdavanjeFaktura.Controllers
                 Invoice invoice = db.Invoices.Find(id);
                 db.Invoices.Remove(invoice);
                 db.SaveChanges();
+
+                TempData["success"] = "Invoice deleted successfully!";
             }
             catch (Exception)
             {

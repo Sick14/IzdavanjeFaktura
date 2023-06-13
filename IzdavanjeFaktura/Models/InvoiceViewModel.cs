@@ -26,6 +26,9 @@ namespace IzdavanjeFaktura.Models
         public decimal TotalPriceWithVAT { get; set; }
         public string Customer { get; set; }
         public virtual ApplicationUser User { get; set; }
+        [Display(Name = "VAT percentage")]
+        public int CountryID { get; set; }
+        public Country Country { get; set; }
         [Required]
         public List<InvoiceItem> InvoiceItems { get; set; }
         //public int ProductID { get; set; }

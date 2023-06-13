@@ -28,6 +28,17 @@
         </div>
     </div>
     <div class="container body-content">
+        @if (TempData["success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                @TempData["success"]
+            </div>
+        }
+        <div class="alert alert-danger alert-dismissible hidden">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <p>Please add at least one product to the list!</p>
+        </div>
         @RenderBody()
         <hr />
         <footer>
@@ -39,3 +50,9 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+<script type="text/javascript">
+    setTimeout(function () {
+        $('.alert-success').fadeOut('fast');
+    }, 3000);
+</script>
