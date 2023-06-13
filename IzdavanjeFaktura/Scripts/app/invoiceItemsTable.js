@@ -1,5 +1,17 @@
 ﻿$(document).ready(function () {
     var orderItems = [];
+
+    $("#InvoiceIssueDate, #InvoiceDueDate").change(function () {
+            var start_date = $("#InvoiceIssueDate").val();
+        var end_date = $("#InvoiceDueDate").val();
+        if ((end_date < start_date) && end_date != '' && start_date != '') {
+            $("#DueDateError").removeClass("hidden");
+        }
+        else {
+            $("#DueDateError").addClass("hidden");
+        }
+    });
+
     $('#add').click(function () {
         var $newRow = $('#tableRow').clone().removeAttr('id');
 
@@ -93,15 +105,17 @@
                 dataType: "JSON",
                 contentType: "application/json"
             });
-            if (orderItems.length > 0) {
-                var message = "Invoice created successfully!"
-                $(location).prop('href', '../Invoices/Index?message=' + message);
-            }
-            else {
-                $('.alert-danger').removeClass("hidden");
-                setTimeout(function () {
-                    $('.alert-danger').fadeOut('fast');
-                }, 3000);
+            if ($("#DueDateError").hasClass("hidden")) {
+                if (orderItems.length > 0) {
+                    var message = "Invoice created successfully!"
+                    $(location).prop('href', '../Invoices/Index?message=' + message);
+                }
+                else {
+                    $('.alert-danger').removeClass("hidden");
+                    setTimeout(function () {
+                        $('.alert-danger').addClass("hidden");
+                    }, 3000);
+                }
             }
         }
         e.preventDefault();

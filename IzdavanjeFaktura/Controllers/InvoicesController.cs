@@ -124,6 +124,12 @@ namespace IzdavanjeFaktura.Controllers
         [HttpPost]
         public ActionResult Create(InvoiceViewModel invoiceViewModel)
         {
+            var dateCompare = DateTime.Compare(invoiceViewModel.InvoiceIssueDate, invoiceViewModel.InvoiceDueDate);
+            if(dateCompare > 0) //First Date is later than the second date
+            {
+                ModelState.AddModelError("InvoiceDueDate", "Invoice Due Date can't be before Invoce Issue Date");
+                ModelState.AddModelError("InvoiceIssueDate", "Invoice Issue Date can't be after Invoce Due Date");
+            }
             if (ModelState.IsValid)
             {
                 Invoice invoice = new Invoice()
