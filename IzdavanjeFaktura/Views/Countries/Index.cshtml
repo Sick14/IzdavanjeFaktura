@@ -1,21 +1,21 @@
-﻿@model IEnumerable<IzdavanjeFaktura.Models.Product>
+﻿@model IEnumerable<IzdavanjeFaktura.Models.Country>
 
 @{
-    ViewBag.Title = "Products List";
+    ViewBag.Title = "Index";
 }
 
-<h2>Products List</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 
-@using (Html.BeginForm("Index", "Products", FormMethod.Get))
+@using (Html.BeginForm("Index", "Countries", FormMethod.Get))
 {
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                @Html.TextBox("description", null, new { @class = "form-control", placeholder = "Product description" })
+                @Html.TextBox("name", null, new { @class = "form-control", placeholder = "Country name" })
             </div>
         </div>
 
@@ -33,10 +33,10 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.PriceWithoutVAT)
+            @Html.DisplayNameFor(model => model.VATPercentage)
         </th>
         <th></th>
     </tr>
@@ -45,26 +45,25 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PriceWithoutVAT)
+                @Html.DisplayFor(modelItem => item.VATPercentage)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ProductID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ProductID }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ProductID })
+                @Html.ActionLink("Edit", "Edit", new { id = item.CountryID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.CountryID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.CountryID })
             </td>
         </tr>
     }
 
 </table>
-
 <ul class="pagination">
     <li class="page-item">
         @if (ViewBag.CurrentPage > 1)
         {
-            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, description = ViewBag.Description})">Previous</a>
+            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage - 1, name = ViewBag.Name})">Previous</a>
         }
         else
         {
@@ -97,7 +96,7 @@
         {
             // view First page
             <li>
-                <a class="page-link" href="@Url.Action("Index", new { page = 1, description = ViewBag.Description})">1</a>
+                <a class="page-link" href="@Url.Action("Index", new { page = 1, name = ViewBag.Name})">1</a>
             </li>
             if (fromPage > 2)
             {
@@ -105,7 +104,7 @@
                 // calculate number page for link ..., it's middle between first page and fromPage
                 var middleNumber = (int)Math.Ceiling((double)(fromPage - 2) / 2) + 1;
                 <li>
-                    <a class="page-link" href="@Url.Action("Index", new { page = middleNumber, description = ViewBag.Description})">...</a>
+                    <a class="page-link" href="@Url.Action("Index", new { page = middleNumber, name = ViewBag.Name})">...</a>
                 </li>
             }
         }
@@ -114,7 +113,7 @@
         for (int i = fromPage; i <= toPage; i++)
         {
             <li @Html.Raw(currentPage == i ? "class=\"page-item active\"" : "") )>
-                <a class="page-link" href="@Url.Action("Index", new { page = i, description = ViewBag.Description})">@i</a>
+                <a class="page-link" href="@Url.Action("Index", new { page = i, name = ViewBag.Name})">@i</a>
             </li>
         }
 
@@ -124,13 +123,13 @@
         {
             int middleNumber = (int)Math.Ceiling((double)(pageCount - toPage) / 2) + toPage;
             <li>
-                <a class="page-link" href="@Url.Action("Index", new { page = middleNumber, description = ViewBag.Description})">...</a>
+                <a class="page-link" href="@Url.Action("Index", new { page = middleNumber, name = ViewBag.Name})">...</a>
             </li>
             // view last page
             if (toPage < pageCount - 1)
             {
                 <li>
-                    <a class="page-link" href="@Url.Action("Index", new { page = pageCount, description = ViewBag.Description})">@pageCount</a>
+                    <a class="page-link" href="@Url.Action("Index", new { page = pageCount, name = ViewBag.Name})">@pageCount</a>
                 </li>
             }
 
@@ -140,7 +139,7 @@
     <li class="page-item">
         @if (ViewBag.CurrentPage < ViewBag.PageCount)
         {
-            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, description = ViewBag.Description})">Next</a>
+            <a class="page-link" href="@Url.Action("Index", new { page = ViewBag.CurrentPage + 1, name = ViewBag.Name})">Next</a>
         }
         else
         {
@@ -150,5 +149,3 @@
         }
     </li>
 </ul>
-
-<script src="~/Scripts/jquery-3.4.1.min.js"></script>

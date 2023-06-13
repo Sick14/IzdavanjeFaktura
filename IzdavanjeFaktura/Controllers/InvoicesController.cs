@@ -92,14 +92,24 @@ namespace IzdavanjeFaktura.Controllers
         public ActionResult Create()
         {
             var products = db.Products.ToList();
-            IEnumerable<SelectListItem> selectList = from p in products
+            IEnumerable<SelectListItem> productsList = from p in products
                                                      select new SelectListItem
                                                      {
                                                          Value = p.ProductID.ToString(),
-                                                         Text = $"{p.Description}"
+                                                         Text = p.Description
                                                      };
 
-            ViewBag.Products = new SelectList(selectList, "Value", "Text");
+            ViewBag.Products = new SelectList(productsList, "Value", "Text");
+
+            var countries = db.Countries.ToList();
+            IEnumerable<SelectListItem> countriesList = from c in countries
+                                                        select new SelectListItem
+                                                     {
+                                                         Value = c.CountryID.ToString(),
+                                                         Text = c.Name + " (" + c.VATPercentage + ")"
+                                                     };
+
+            ViewBag.Countries = new SelectList(countriesList, "Value", "Text");
 
             return View();
         }
@@ -110,11 +120,6 @@ namespace IzdavanjeFaktura.Controllers
         [HttpPost]
         public ActionResult Create(InvoiceViewModel invoiceViewModel)
         {
-            if(invoiceViewModel.TotalPriceWithVAT == 0)
-            {
-                invoiceViewModel.TotalPriceWithVAT = invoiceViewModel.TotalPriceWithoutVAT * (decimal)1.17;
-                ModelState.Remove("TotalPriceWithVAT");
-            }
             if (ModelState.IsValid)
             {
                 Invoice invoice = new Invoice()

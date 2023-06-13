@@ -27,6 +27,7 @@ namespace IzdavanjeFaktura.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public DbSet<Country> Countries { get; set; }
 
         public static ApplicationDbContext Create()
         {

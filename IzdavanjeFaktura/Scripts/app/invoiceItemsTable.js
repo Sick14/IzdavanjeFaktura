@@ -42,6 +42,17 @@
         var totalPriceConvert = Number(totalPrice);
         var sum = totalPriceWithoutVAT + totalPriceConvert;
         $('#TotalPriceWithoutVAT').val(sum.toFixed(2));
+
+        if ($('#CountryID').val() != '' && $('#TotalPriceWithoutVAT').val() != '') {
+            $.ajax({
+                type: "GET",
+                url: '/VAT/CalculateVAT',
+                data: { countryId: $('#CountryID').val(), price: $('#TotalPriceWithoutVAT').val() },
+                success: function (vatAmount) {
+                    $('#TotalPriceWithVAT').val(vatAmount.toFixed(2));
+                }
+            });
+        }
     }
 
     function calculatePriceSubstract(totalPrice) {
@@ -49,6 +60,17 @@
         var totalPriceConvert = Number(totalPrice);
         var total = totalPriceWithoutVAT - totalPriceConvert;
         $('#TotalPriceWithoutVAT').val(total.toFixed(2));
+
+        if ($('#CountryID').val() != '' && $('#TotalPriceWithoutVAT').val() != '') {
+            $.ajax({
+                type: "GET",
+                url: '/VAT/CalculateVAT',
+                data: { countryId: $('#CountryID').val(), price: $('#TotalPriceWithoutVAT').val() },
+                success: function (vatAmount) {
+                    $('#TotalPriceWithVAT').val(vatAmount.toFixed(2));
+                }
+            });
+        }
     }
     $('#submit').click(function (e) {
         var data = {

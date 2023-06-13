@@ -170,19 +170,27 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CountriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\VATController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IVatCalculator.cs" />
     <Compile Include="Migrations\202306111829472_InitialDbCreate.cs" />
     <Compile Include="Migrations\202306111829472_InitialDbCreate.designer.cs">
       <DependentUpon>202306111829472_InitialDbCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306131803011_AddedCountryModel.cs" />
+    <Compile Include="Migrations\202306131803011_AddedCountryModel.designer.cs">
+      <DependentUpon>202306131803011_AddedCountryModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Country.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Invoice.cs" />
     <Compile Include="Models\InvoiceItem.cs" />
@@ -302,6 +310,11 @@
     <Content Include="Views\Invoices\Details.cshtml" />
     <Content Include="Views\Invoices\Edit.cshtml" />
     <Content Include="Views\Invoices\Index.cshtml" />
+    <Content Include="Views\Countries\Create.cshtml" />
+    <Content Include="Views\Countries\Delete.cshtml" />
+    <Content Include="Views\Countries\Details.cshtml" />
+    <Content Include="Views\Countries\Edit.cshtml" />
+    <Content Include="Views\Countries\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -322,6 +335,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202306111829472_InitialDbCreate.resx">
       <DependentUpon>202306111829472_InitialDbCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306131803011_AddedCountryModel.resx">
+      <DependentUpon>202306131803011_AddedCountryModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
