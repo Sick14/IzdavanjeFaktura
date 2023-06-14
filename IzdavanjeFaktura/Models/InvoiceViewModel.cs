@@ -16,9 +16,11 @@ namespace IzdavanjeFaktura.Models
         public string InvoiceNumber { get; set; }
         [Display(Name = "Issue Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime InvoiceIssueDate { get; set; }
         [Display(Name = "Due Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime InvoiceDueDate { get; set; }
         [Display(Name = "Total price (Without VAT)")]
         public decimal TotalPriceWithoutVAT { get; set; }

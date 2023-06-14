@@ -141,15 +141,6 @@
 <script src="~/Scripts/app/invoiceItemsTable.js"></script>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#Quantity').val(0);
-
-        //$(function () {
-        //    $('#InvoiceIssueDate').datepicker();
-        //    $('#InvoiceDueDate').datepicker();
-        //});
-    });
-
     $("#ProductID").change(function () {
         if (this.value != '') {
             $.ajax({

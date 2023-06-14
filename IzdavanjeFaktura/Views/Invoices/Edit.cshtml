@@ -1,4 +1,4 @@
-﻿@model IzdavanjeFaktura.Models.Invoice
+﻿@model IzdavanjeFaktura.Models.InvoiceViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -7,70 +7,147 @@
 <h2>Edit</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "myFormEdit" }))
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Invoice</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.InvoiceID)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>
+<div class="form-horizontal">
+    <h4>Invoice</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.InvoiceID)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.InvoiceIssueDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InvoiceIssueDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InvoiceIssueDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.InvoiceDueDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.InvoiceDueDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.InvoiceDueDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalPriceWithoutVAT, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalPriceWithoutVAT, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalPriceWithoutVAT, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.TotalPriceWithVAT, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TotalPriceWithVAT, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TotalPriceWithVAT, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Customer, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Customer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Customer, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.InvoiceNumber, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.InvoiceNumber, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.InvoiceNumber, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.InvoiceIssueDate, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.InvoiceIssueDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.InvoiceIssueDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.InvoiceDueDate, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.InvoiceDueDate, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.InvoiceDueDate, "", new { @class = "text-danger" })
+            <span id="DueDateError" class="text-danger hidden">Invoice Due Date must be after Invoice Issue Date</span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Customer, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.Customer, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Customer, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TotalPriceWithoutVAT, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.TotalPriceWithoutVAT, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.TotalPriceWithoutVAT, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("VAT Percentage", htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.DropDownList("CountryID", ViewBag.Countries as SelectList, "---  Select country  ---", new { @class = "form-control" })                @Html.ValidationMessageFor(model => model.TotalPriceWithoutVAT, "", new { @class = "text-danger" })
+            @Html.ValidationMessageFor(model => model.CountryID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TotalPriceWithVAT, htmlAttributes: new { @class = "control-label col-md-4" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.TotalPriceWithVAT, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+            @Html.ValidationMessageFor(model => model.TotalPriceWithVAT, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-4 col-md-8">
+            <input type="button" id="submitEdit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+
+    <table class="table table-bordered table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceItems[0].Product.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceItems[0].Quantity)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceItems[0].PriceWithoutVAT)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InvoiceItems[0].TotalPriceWithoutVAT)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="tableRow">
+                <td>
+                    @Html.DropDownList("ProductID", ViewBag.Products as SelectList, "---  Select product  ---", new { @class = "form-control" })
+                </td>
+                <td>
+                    @Html.Editor("Quantity", new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessage("Quantity", "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.Editor("PriceWithoutVATPerItem", new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessage("PriceWithoutVATPerItem", "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.Editor("TotalPriceWithoutVATPerItem", new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessage("TotalPriceWithoutVATPerItem", "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    <input type="button" id="add" value="Add" class="btn btn-default" disabled />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="ordertable" class="table table-bordered table-hover table-responsive">
+        @foreach (var item in Model.InvoiceItems)
+        {
+            <tr>
+                <td>
+                    @Html.EditorFor(modelItem => item.Product.Description, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                </td>
+                <td>
+                    @Html.EditorFor(modelItem => item.Quantity, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(modelItem => item.Quantity, "", new { @class = "text-danger" })
+                </td>
+                <td>
+                    @Html.EditorFor(modelItem => item.PriceWithoutVAT, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                </td>
+                <td>
+                    @Html.EditorFor(modelItem => item.TotalPriceWithoutVAT, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                </td>
+                <td>
+                    <input type="button" value="Remove" class="btn btn-danger remove">
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 }
 
 <div>
@@ -82,3 +159,47 @@
 }
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/app/invoiceItemsTable.js"></script>
+
+<script type="text/javascript">
+    $("#ProductID").change(function () {
+        if (this.value != '') {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("GetProduct", "Products")',
+                data: { id: this.value },
+                success: function (product) {
+                    $('#Quantity').val(1);
+                    $('#PriceWithoutVATPerItem').val(product.PriceWithoutVAT);
+                    $('#TotalPriceWithoutVATPerItem').val(product.PriceWithoutVAT);
+                    $('#add').attr("disabled", false);
+                }
+            });
+        }
+        else {
+            $('#Quantity').val(0);
+            $('#PriceWithoutVATPerItem').val('');
+            $('#TotalPriceWithoutVATPerItem').val('');
+            $('#add').attr("disabled", true);
+        }
+    });
+
+    $("#Quantity").change(function () {
+        if (this.value != '' && this.value != 0) {
+            $('#TotalPriceWithoutVATPerItem').val(($('#PriceWithoutVATPerItem').val() * this.value).toFixed(2));
+        }
+    });
+
+    $("#CountryID").change(function () {
+        if (this.value != '' && $('#TotalPriceWithoutVAT').val() != '') {
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("CalculateVAT", "VAT")',
+                data: { countryId: this.value, price: $('#TotalPriceWithoutVAT').val() },
+                success: function (vatAmount) {
+                    $('#TotalPriceWithVAT').val(vatAmount.toFixed(2));
+                }
+            });
+        }
+    });
+</script>

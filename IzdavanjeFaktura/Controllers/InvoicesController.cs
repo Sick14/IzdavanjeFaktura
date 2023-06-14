@@ -188,31 +188,117 @@ namespace IzdavanjeFaktura.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            var products = db.Products.ToList();
+            IEnumerable<SelectListItem> selectList = from p in products
+                                                     select new SelectListItem
+                                                     {
+                                                         Value = p.ProductID.ToString(),
+                                                         Text = p.Description
+                                                     };
+
+            ViewBag.Products = new SelectList(selectList, "Value", "Text");
+
+            var countries = db.Countries.ToList();
+            IEnumerable<SelectListItem> countriesList = from c in countries
+                                                        select new SelectListItem
+                                                        {
+                                                            Value = c.CountryID.ToString(),
+                                                            Text = c.Name + " (" + c.VATPercentage + " %)"
+                                                        };
+
+            ViewBag.Countries = new SelectList(countriesList, "Value", "Text");
+
             Invoice invoice = db.Invoices.Find(id);
+
+            InvoiceViewModel invoiceViewModel = new InvoiceViewModel()
+            {
+                CountryID = invoice.CountryID,
+                Country = invoice.Country,
+                Customer = invoice.Customer,
+                InvoiceDueDate = invoice.InvoiceDueDate,
+                InvoiceID = invoice.InvoiceID,
+                InvoiceIssueDate = invoice.InvoiceIssueDate,
+                InvoiceNumber = invoice.InvoiceNumber,
+                TotalPriceWithoutVAT = invoice.TotalPriceWithoutVAT,
+                TotalPriceWithVAT = invoice.TotalPriceWithVAT,
+                User = invoice.User,
+                InvoiceItems = invoice.InvoiceItems.ToList()
+            };
+
             if (invoice == null)
             {
                 return HttpNotFound();
             }
-            return View(invoice);
+            return View(invoiceViewModel);
         }
 
         // POST: Invoices/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "InvoiceID,InvoiceNumber,InvoiceIssueDate,InvoiceDueDate,TotalPriceWithoutVAT,TotalPriceWithVAT,Customer")] Invoice invoice)
+        public ActionResult Edit(InvoiceViewModel invoiceViewModel)
         {
+            var dateCompare = DateTime.Compare(invoiceViewModel.InvoiceIssueDate, invoiceViewModel.InvoiceDueDate);
+            if (dateCompare > 0) //First Date is later than the second date
+            {
+                ModelState.AddModelError("InvoiceDueDate", "Invoice Due Date can't be before Invoce Issue Date");
+                ModelState.AddModelError("InvoiceIssueDate", "Invoice Issue Date can't be after Invoce Due Date");
+            }
             if (ModelState.IsValid)
             {
+                Invoice invoice = new Invoice()
+                {
+                    Customer = invoiceViewModel.Customer,
+                    InvoiceDueDate = invoiceViewModel.InvoiceDueDate,
+                    InvoiceIssueDate = invoiceViewModel.InvoiceIssueDate,
+                    InvoiceNumber = invoiceViewModel.InvoiceNumber,
+                    TotalPriceWithoutVAT = invoiceViewModel.TotalPriceWithoutVAT,
+                    TotalPriceWithVAT = invoiceViewModel.TotalPriceWithVAT,
+                    UserID = User.Identity.GetUserId(),
+                    CountryID = invoiceViewModel.CountryID,
+                    InvoiceID = invoiceViewModel.InvoiceID
+                };
+
                 db.Entry(invoice).State = EntityState.Modified;
                 db.SaveChanges();
 
-                TempData["success"] = "Invoice edited successfully!";
+                List<InvoiceItem> invocieItems = db.InvoiceItems.Where(i => i.InvoiceID == invoice.InvoiceID).ToList();
+                db.InvoiceItems.RemoveRange(invocieItems);
+                db.SaveChanges();
+
+                foreach (var item in invoiceViewModel.InvoiceItems)
+                {
+                    item.InvoiceID = invoice.InvoiceID;
+                    db.InvoiceItems.Add(item);
+                }
+
+                db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
-            return View(invoice);
+
+            var products = db.Products.ToList();
+            IEnumerable<SelectListItem> selectList = from p in products
+                                                     select new SelectListItem
+                                                     {
+                                                         Value = p.ProductID.ToString(),
+                                                         Text = p.Description
+                                                     };
+
+            ViewBag.Products = new SelectList(selectList, "Value", "Text");
+
+            var countries = db.Countries.ToList();
+            IEnumerable<SelectListItem> countriesList = from c in countries
+                                                        select new SelectListItem
+                                                        {
+                                                            Value = c.CountryID.ToString(),
+                                                            Text = c.Name + " (" + c.VATPercentage + " %)"
+                                                        };
+
+            ViewBag.Countries = new SelectList(countriesList, "Value", "Text");
+
+            return View(invoiceViewModel);
         }
 
         // GET: Invoices/Delete/5
@@ -267,6 +353,15 @@ namespace IzdavanjeFaktura.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        public JsonResult GetInvoiceItemsByInvoiceID(int id)
+        {
+            db.Configuration.ProxyCreationEnabled = false;
+
+            List<InvoiceItem> invoiceList = (from i in db.InvoiceItems where i.InvoiceID == id select i).ToList();
+
+            return Json(invoiceList, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)
